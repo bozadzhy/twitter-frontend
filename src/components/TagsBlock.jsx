@@ -18,7 +18,7 @@ export const TagsBlock = ({ items, isLoading = true }) => {
       <List>
         {(isLoading ? [...Array(5)] : filteredItems).map((name, i) => (
           <Link
-            key={name}
+          key={isLoading ? i : name}
             style={{ textDecoration: "none", color: "black" }}
             to={`/tags/${name}`}
           >
