@@ -13,8 +13,7 @@ function App() {
 
   useEffect(() => {
     dispatch(fetchAuthMe());
-    dispatch(fetchPosts());
-    dispatch(fetchTags());
+  
   }, []);
   return (
     <>

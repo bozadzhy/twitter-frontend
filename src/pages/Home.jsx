@@ -6,10 +6,13 @@ import { Box } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useDispatch, useSelector } from "react-redux";
 
+import { fetchPosts, fetchTags } from "../redux/slices/posts";
+
 import { Post } from "../components/Post";
 import { TagsBlock } from "../components/TagsBlock";
 import { CommentsBlock } from "../components/CommentsBlock";
 import BasicTabs from "../components/BasicTabs";
+import { selectIsAuth } from "../redux/slices/auth";
 
 export const Home = () => {
   const dispatch = useDispatch();
@@ -17,6 +20,11 @@ export const Home = () => {
   const { posts, tags } = useSelector((state) => state.posts);
   const isPostLoading = posts.status === "loading";
   const isTagsLoading = tags.status === "loading";
+
+  useEffect(()=> {
+    dispatch(fetchPosts());
+    dispatch(fetchTags());
+  }, [])
 
   return (
     <>
@@ -60,14 +68,14 @@ export const Home = () => {
             items={[
               {
                 user: {
-                  fullName: "Вася Пупкин",
+                  fullName: "John Smith",
                   avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
                 },
-                text: "Это тестовый комментарий",
+                text: "New Comment",
               },
               {
                 user: {
-                  fullName: "Иван Иванов",
+                  fullName: "Dave Smith",
                   avatarUrl: "https://mui.com/static/images/avatar/2.jpg",
                 },
                 text: "When displaying three lines or more, the avatar is not aligned at the top. You should set the prop to align the avatar at the top",

@@ -18,6 +18,7 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
+import TwitterIcon from '@mui/icons-material/Twitter';
 // import Link from "@mui/material/Link";
 
 // const pages = ["Products", "Pricing", "Blog"];
@@ -33,18 +34,10 @@ const Header = () => {
       window.localStorage.removeItem("token");
     }
   };
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = () => {
@@ -54,26 +47,26 @@ const Header = () => {
     <AppBar position="static">
       <Container>
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: "flex", mr: 1 }} />
+          <TwitterIcon sx={{mr:"8px"}}/>
           <Typography
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
               fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: ".3rem",
               color: "inherit",
               textDecoration: "none",
+            
             }}
-          ></Typography>
+          >Twitter</Typography>
 
           <Box sx={{ flexGrow: 1, display: "flex" }}>
             <Link className={styles.logo} to="/">
-              <div>BLOG</div>
+              <div>Posts</div>
             </Link>
           </Box>
 
@@ -98,7 +91,7 @@ const Header = () => {
               </Box>
 
               <Box sx={{ flexGrow: 0 }}>
-                <Tooltip>
+                <Tooltip title="account">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <Avatar>{user.fullName.toUpperCase().charAt(0)}</Avatar>
                   </IconButton>
