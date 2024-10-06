@@ -18,11 +18,9 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import TwitterIcon from '@mui/icons-material/Twitter';
-// import Link from "@mui/material/Link";
-
-// const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+import TwitterIcon from "@mui/icons-material/Twitter";
+import LogoutIcon from "@mui/icons-material/Logout";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const Header = () => {
   const isAuth = useSelector(selectIsAuth);
@@ -44,10 +42,10 @@ const Header = () => {
     setAnchorElUser(null);
   };
   return (
-    <AppBar position="static">
+    <AppBar color="secondary" position="static">
       <Container>
         <Toolbar disableGutters>
-          <TwitterIcon sx={{mr:"8px"}}/>
+          <TwitterIcon sx={{ mr: "8px" }} />
           <Typography
             variant="h6"
             noWrap
@@ -60,9 +58,10 @@ const Header = () => {
               fontWeight: 700,
               color: "inherit",
               textDecoration: "none",
-            
             }}
-          >Twitter</Typography>
+          >
+            Twitter
+          </Typography>
 
           <Box sx={{ flexGrow: 1, display: "flex" }}>
             <Link className={styles.logo} to="/">
@@ -80,22 +79,18 @@ const Header = () => {
                   <div className={styles.logo}>write an article</div>
                 </Link>
 
-                <Button
-                  sx={{ marginRight: "8px" }}
-                  onClick={onClickLogout}
-                  variant="contained"
-                  color="error"
-                >
-                  LOGOUT
-                </Button>
+               
               </Box>
 
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="account">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar>{user.fullName.toUpperCase().charAt(0)}</Avatar>
+                    <AccountCircleIcon fontSize="large" />
                   </IconButton>
                 </Tooltip>
+                <IconButton onClick={onClickLogout}>
+                  <LogoutIcon />
+                </IconButton>
                 <Menu
                   sx={{ mt: "45px", display: { xs: "flex", md: "none" } }}
                   id="menu-appbar"
@@ -112,6 +107,7 @@ const Header = () => {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
+                  
                   <MenuItem
                     onClick={() => {
                       handleCloseUserMenu();
@@ -120,7 +116,7 @@ const Header = () => {
                   >
                     <Button
                       sx={{ marginRight: "8px" }}
-                      variant="contained"
+                      variant="outlined"
                       color="error"
                     >
                       LOGOUT
@@ -149,7 +145,7 @@ const Header = () => {
                 to="/register"
                 style={{ textDecoration: "none", marginRight: 8 }}
               >
-                <div className={styles.logo}>Create profile</div>
+                <div className={styles.logo}>Registration</div>
               </Link>
             </>
           )}

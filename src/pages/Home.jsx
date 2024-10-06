@@ -1,18 +1,17 @@
-import React, { useEffect } from "react";
-
+import React, { useEffect, useState } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useDispatch, useSelector } from "react-redux";
 
 import { fetchPosts, fetchTags } from "../redux/slices/posts";
-
 import { Post } from "../components/Post";
 import { TagsBlock } from "../components/TagsBlock";
 import { CommentsBlock } from "../components/CommentsBlock";
-import BasicTabs from "../components/BasicTabs";
 import { selectIsAuth } from "../redux/slices/auth";
+import { styled } from "@mui/material";
+import { purple } from '@mui/material/colors';  
 
 export const Home = () => {
   const dispatch = useDispatch();
@@ -21,29 +20,59 @@ export const Home = () => {
   const isPostLoading = posts.status === "loading";
   const isTagsLoading = tags.status === "loading";
 
-  useEffect(()=> {
+  const [isNewPosts, setIsNewPosts] = useState(true);
+  const sortedPosts = posts?.items
+    .slice()
+    .sort((a, b) => b.viewsCount - a.viewsCount);
+
+  useEffect(() => {
     dispatch(fetchPosts());
     dispatch(fetchTags());
-  }, [])
+  }, [dispatch]);
+
+  const postItems = isPostLoading
+    ? [...Array(5)]
+    : isNewPosts
+    ? posts?.items || []
+    : sortedPosts || [];
+
+    // const ColorButton = styled(Button)(({ theme }) => ({
+    //   color: theme.palette.getContrastText(purple[500]),
+    //   backgroundColor: '#005265',
+    //   '&:hover': {
+    //     backgroundColor: '#005266',
+    //   },
+    // }));
 
   return (
     <>
-    <BasicTabs/>
-  
-      {/* <Tabs style={{ marginBottom: 15 }} aria-label="basic tabs example">
-        <Tab label="Новые" />
-        <Tab label="Популярные" />
-      </Tabs> */}
+      <Box sx={{mt: 2, mb: 2}}>
+        <Button
+        sx={{mr: 2}}
+          variant={isNewPosts ? "contained" : "outlined"}
+          onClick={() => setIsNewPosts(true)}
+          color="primary"
+        >
+          New Posts
+        </Button>
+        <Button
+       
+          variant={isNewPosts ? "outlined" : "contained"}
+          onClick={() => setIsNewPosts(false)}
+        >
+          Popular Posts
+        </Button>
+      </Box>
 
       <Grid container spacing={4}>
         <Grid xs={8} item>
           <>
-            {(isPostLoading ? [...Array(5)] : posts.items).map((obj, index) =>
+            {postItems.map((obj, index) =>
               isPostLoading ? (
                 <Post key={index} isLoading={true} />
               ) : (
                 <Post
-                  key={index}
+                  key={obj._id}
                   _id={obj._id}
                   title={obj.title}
                   imageUrl={
@@ -54,7 +83,7 @@ export const Home = () => {
                   user={obj.user}
                   createdAt={obj.createdAt}
                   viewsCount={obj.viewsCount}
-                  commentsCount={3}
+                  commentsCount={obj.commentsCount || 0}
                   tags={obj.tags}
                   isEditable={userData?._id === obj.user._id}
                 />
