@@ -23,7 +23,7 @@ export const Home = () => {
   const [isNewPosts, setIsNewPosts] = useState(true);
   const sortedPosts = posts?.items
     .slice()
-    .sort((a, b) => b.viewsCount - a.viewsCount);
+    .sort((a, b) => a.viewsCount - b.viewsCount);
 
   useEffect(() => {
     dispatch(fetchPosts());
@@ -35,14 +35,7 @@ export const Home = () => {
     : isNewPosts
     ? posts?.items || []
     : sortedPosts || [];
-
-    // const ColorButton = styled(Button)(({ theme }) => ({
-    //   color: theme.palette.getContrastText(purple[500]),
-    //   backgroundColor: '#005265',
-    //   '&:hover': {
-    //     backgroundColor: '#005266',
-    //   },
-    // }));
+    const reversedArray = postItems.slice().reverse();
 
   return (
     <>
@@ -67,7 +60,7 @@ export const Home = () => {
       <Grid container spacing={4}>
         <Grid xs={8} item>
           <>
-            {postItems.map((obj, index) =>
+            {reversedArray.map((obj, index) =>
               isPostLoading ? (
                 <Post key={index} isLoading={true} />
               ) : (
@@ -84,7 +77,7 @@ export const Home = () => {
                   createdAt={obj.createdAt}
                   viewsCount={obj.viewsCount}
                   commentsCount={obj.commentsCount || 0}
-                  tags={obj.tags}
+                  tags={obj.tags.map((tag) => tag.trim())}
                   isEditable={userData?._id === obj.user._id}
                 />
               )

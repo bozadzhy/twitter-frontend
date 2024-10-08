@@ -71,7 +71,7 @@ export const AddPost = () => {
         setTitle(data.title);
         setText(data.text);
         setImageUrl(data.imageUrl);
-        setTags(data.tags.toString());
+        setTags(data.tags);
       });
     }
   }, []);
@@ -90,7 +90,6 @@ export const AddPost = () => {
     }),
     []
   );
-  // console.log("tags", tags); 
 
   if (!window.localStorage.getItem("token") && !isAuth) {
     return <Navigate to={"/"} />;

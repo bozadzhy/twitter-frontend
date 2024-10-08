@@ -12,13 +12,14 @@ import Skeleton from "@mui/material/Skeleton";
 import { SideBlock } from "./SideBlock";
 
 export const TagsBlock = ({ items, isLoading = true }) => {
-  const filteredItems = items.filter((str) => str.trim());
+  const noRepeatedITags = [...new Set(items)];
+
   return (
     <SideBlock title="Тэги">
       <List>
-        {(isLoading ? [...Array(5)] : filteredItems).map((name, i) => (
+        {(isLoading ? [...Array(5)] : noRepeatedITags).map((name, i) => (
           <Link
-          key={isLoading ? i : name}
+            key={isLoading ? i : name + Math.floor(i)}
             style={{ textDecoration: "none", color: "black" }}
             to={`/tags/${name}`}
           >
