@@ -56,7 +56,6 @@ export const Home = () => {
     };
     fetchUsers();
   }, []);
-  console.log("users", users);
 
   return (
     <>
