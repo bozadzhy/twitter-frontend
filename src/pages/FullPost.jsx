@@ -7,47 +7,52 @@ import { Index } from "../components/AddComment";
 import { CommentsBlock } from "../components/CommentsBlock";
 import axios from "../axios";
 import { Box } from "@mui/material";
+import { useSelector } from "react-redux";
 
 export const FullPost = () => {
   const { id } = useParams();
 
+  const allPosts = useSelector((state) => state.posts.posts.items);
+  // console.log("info", allPosts);
   const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(true);
-
   const [dataCom, setDataCom] = useState(null);
-useEffect(() => {
-    axios.get(`/posts/${id}/comments`).then(({ data }) => {
-      setDataCom(data);
-    });
-  }, []);
-  console.log("dataCom", dataCom);
-
 
   useEffect(() => {
-    axios
-      .get(`/posts/${id}`)
-      .then((res) => {
-        setData(res.data);
+    const fetchData = async () => {
+      try { 
+        const [postResponse, commentsResponse] = await Promise.all([
+          axios.get(`/posts/${id}`),
+          axios.get(`/posts/${id}/comments`),
+        ]);
+
+        setData(postResponse.data);
+        setDataCom(commentsResponse.data);
         setIsLoading(false);
-      })
-      .catch((err) => {
+      } catch (err) {
         console.warn(err);
-        alert("oшибка при получении статьи");
-      });
+        alert("Ошибка при получении данных");
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
-  // console.log("data", data);
 
   if (isLoading) {
     return <Post isLoading={isLoading} isFullPost />;
   }
 
   return (
-    <Box sx={{mt:2}}>
+    <Box sx={{ mt: 2 }}>
       <Post
-      
         _id={data._id}
         title={data.title}
-        imageUrl={data.imageUrl ? `https://fullstack-backend-d6nr.onrender.com${data.imageUrl}` : ''}
+        imageUrl={
+          data.imageUrl
+            ? `https://fullstack-backend-d6nr.onrender.com${data.imageUrl}`
+            : ""
+        }
         user={data.user}
         createdAt={data.createdAt}
         viewsCount={data.viewsCount}
@@ -57,10 +62,7 @@ useEffect(() => {
       >
         <Markdown children={data.text} />
       </Post>
-      <CommentsBlock
-        items={dataCom.comments}
-        isLoading={false}
-      >
+      <CommentsBlock items={dataCom.comments} isLoading={false}>
         <Index />
       </CommentsBlock>
     </Box>

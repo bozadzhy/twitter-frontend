@@ -16,8 +16,8 @@ export const fetchRemovePost = createAsyncThunk(
 
 export const fetchCreateComment = createAsyncThunk(
   "posts/fetchCreateComment",
-  async (id) => {
-    const { data } = await axios.post(`/posts/${id}/comments`);
+  async ({ id, body }) => {
+    const { data } = await axios.post(`/posts/${id}/comments`, { body });
     return data;
   }
 );
@@ -67,19 +67,15 @@ const PostsSlice = createSlice({
       state.tags.items = [];
       state.tags.status = "error";
     },
-    
     // comments
-    [fetchCreateComment.pending]: (state) => {
-      state.posts.items = [];
-      state.posts.status = "loading";
-    },
     [fetchCreateComment.fulfilled]: (state, action) => {
-      state.posts.items = action.payload;
-      state.posts.status = "loaded";
-    },
-    [fetchCreateComment.rejected]: (state) => {
-      state.posts.items = [];
-      state.posts.status = "error";
+      const id = action.payload.id; // Получаем ID поста из ответа
+      const comment = action.payload.comment; // Получаем новый комментарий из ответа
+  
+      const post = state.posts.items.find((post) => post._id === id);
+      if (post) {
+        post.comments.push(comment); // Добавляем новый комментарий к посту
+      }
     },
 
     // delete post

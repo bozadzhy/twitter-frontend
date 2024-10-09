@@ -9,21 +9,12 @@ import Button from "@mui/material/Button";
 import { fetchCreateComment } from "../../redux/slices/posts.js";
 
 export const Index = () => {
-  
-  const yourAuthToken = localStorage.getItem("token");
   const dispatch = useDispatch();
   const { id } = useParams();
   const [comment, setComment] = React.useState("");
 
-  
-
   const onSubmit = async (e) => {
-
-
-    if (!comment) {
-      console.warn("Comment cannot be empty");
-      return;
-    }
+    e.preventDefault();
 
     try {
       const response = await axios.post(
@@ -31,11 +22,7 @@ export const Index = () => {
         {
           body: comment,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${yourAuthToken}`, // Передаем токен
-          },
-        }
+        
       );
 
       // dispatch(fetchCreateComment(response.data)); // Если нужно
@@ -61,7 +48,7 @@ export const Index = () => {
           value={comment}
           onChange={(e) => setComment(e.target.value)}
         />
-        <Button  type="submit" variant="contained">
+        <Button type="submit" variant="contained">
           Отправить
         </Button>
       </form>
