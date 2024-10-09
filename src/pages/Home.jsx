@@ -37,6 +37,11 @@ export const Home = () => {
     : sortedPosts || [];
     const reversedArray = postItems.slice().reverse();
 
+    const itemsArr = useSelector((state) => state.posts.posts.items);
+    const commentsArr = itemsArr?.map((item) => item.comments);
+    console.log("commentsArr", commentsArr)
+    const allComments = commentsArr?.flat();
+
   return (
     <>
       <Box sx={{mt: 2, mb: 2}}>
@@ -87,22 +92,7 @@ export const Home = () => {
         <Grid xs={4} item>
           <TagsBlock items={tags.items} isLoading={isTagsLoading} />
           <CommentsBlock
-            items={[
-              {
-                user: {
-                  fullName: "John Smith",
-                  avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
-                },
-                text: "New Comment",
-              },
-              {
-                user: {
-                  fullName: "Dave Smith",
-                  avatarUrl: "https://mui.com/static/images/avatar/2.jpg",
-                },
-                text: "When displaying three lines or more, the avatar is not aligned at the top. You should set the prop to align the avatar at the top",
-              },
-            ]}
+            items={allComments}
             isLoading={false}
           />
         </Grid>

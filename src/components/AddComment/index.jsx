@@ -15,23 +15,17 @@ export const Index = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-
-    try {
-      const response = await axios.post(
-        `/posts/${id}/comments`,
-        {
-          body: comment,
-        },
-        
-      );
-
-      // dispatch(fetchCreateComment(response.data)); // Если нужно
-      setComment("");
-    } catch (error) {
-      console.error("Error adding comment:", error.response.data); // Выводим сообщение об ошибке
-    }
+    await handleCommentSubmit(id, comment);
   };
 
+  const handleCommentSubmit = async (id, comment) => {
+    try {
+      await dispatch(fetchCreateComment({ id, body: comment }));
+      setComment("");
+    } catch (error) {
+      console.error("Error adding comment:", error);
+    }
+  };
   return (
     <div className={styles.root}>
       <Avatar

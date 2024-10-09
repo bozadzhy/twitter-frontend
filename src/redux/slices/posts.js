@@ -18,7 +18,7 @@ export const fetchCreateComment = createAsyncThunk(
   "posts/fetchCreateComment",
   async ({ id, body }) => {
     const { data } = await axios.post(`/posts/${id}/comments`, { body });
-    return data;
+    return { id, comment: data }; // Return the post ID and the new comment
   }
 );
 
@@ -69,13 +69,14 @@ const PostsSlice = createSlice({
     },
     // comments
     [fetchCreateComment.fulfilled]: (state, action) => {
-      const id = action.payload.id; // Получаем ID поста из ответа
-      const comment = action.payload.comment; // Получаем новый комментарий из ответа
-  
+      const { id, comment } = action.payload;
       const post = state.posts.items.find((post) => post._id === id);
       if (post) {
-        post.comments.push(comment); // Добавляем новый комментарий к посту
+        post.comments.push(comment);
       }
+    },
+    [fetchCreateComment.rejected]: (state, action) => {
+      console.error("Error adding comment:", action.error.message);
     },
 
     // delete post

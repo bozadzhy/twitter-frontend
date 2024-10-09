@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -12,7 +13,9 @@ import Skeleton from "@mui/material/Skeleton";
 import { SideBlock } from "./SideBlock";
 
 export const TagsBlock = ({ items, isLoading = true }) => {
+
   const noRepeatedITags = [...new Set(items)];
+
 
   return (
     <SideBlock title="Тэги">
