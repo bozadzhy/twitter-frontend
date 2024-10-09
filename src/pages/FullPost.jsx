@@ -6,12 +6,21 @@ import { Post } from "../components/Post";
 import { Index } from "../components/AddComment";
 import { CommentsBlock } from "../components/CommentsBlock";
 import axios from "../axios";
+import { Box } from "@mui/material";
 
 export const FullPost = () => {
   const { id } = useParams();
 
   const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(true);
+
+  const [dataCom, setDataCom] = useState(null);
+useEffect(() => {
+    axios.get(`/posts/${id}/comments`).then(({ data }) => {
+      setDataCom(data);
+    });
+  }, []);
+  console.log("dataCom", dataCom);
 
 
   useEffect(() => {
@@ -33,8 +42,9 @@ export const FullPost = () => {
   }
 
   return (
-    <>
+    <Box sx={{mt:2}}>
       <Post
+      
         _id={data._id}
         title={data.title}
         imageUrl={data.imageUrl ? `https://fullstack-backend-d6nr.onrender.com${data.imageUrl}` : ''}
@@ -48,26 +58,11 @@ export const FullPost = () => {
         <Markdown children={data.text} />
       </Post>
       <CommentsBlock
-        items={[
-          {
-            user: {
-              fullName: "Вася Пупкин",
-              avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
-            },
-            text: "Это тестовый комментарий 555555",
-          },
-          {
-            user: {
-              fullName: "Иван Иванов",
-              avatarUrl: "https://mui.com/static/images/avatar/2.jpg",
-            },
-            text: "When displaying three lines or more, the avatar is not aligned at the top. You should set the prop to align the avatar at the top",
-          },
-        ]}
+        items={dataCom.comments}
         isLoading={false}
       >
         <Index />
       </CommentsBlock>
-    </>
+    </Box>
   );
 };

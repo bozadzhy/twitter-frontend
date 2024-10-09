@@ -19,6 +19,7 @@ export const AddPost = () => {
   const inputFileRef = React.useRef(null);
   const isAuth = useSelector(selectIsAuth);
   const [text, setText] = React.useState("");
+  const [comments, setComments] = React.useState("")
   const [title, setTitle] = React.useState("");
   const [tags, setTags] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
@@ -53,6 +54,7 @@ export const AddPost = () => {
         imageUrl,
         tags,
         text,
+        comments,
       };
       const { data } = isEditing
         ? await axios.patch(`/posts/${id}`, fields)
@@ -72,6 +74,7 @@ export const AddPost = () => {
         setText(data.text);
         setImageUrl(data.imageUrl);
         setTags(data.tags);
+        setComments(data.comments);
       });
     }
   }, []);
@@ -144,6 +147,14 @@ export const AddPost = () => {
         value={tags}
         onChange={(e) => setTags(e.target.value)}
       />
+      {/* <TextField
+        classes={{ root: styles.tags }}
+        variant="standard"
+        placeholder="Comments"
+        fullWidth
+        value={comments}
+        onChange={(e) => setComments(e.target.value)}
+      /> */}
       <SimpleMDE
         className={styles.editor}
         value={text}

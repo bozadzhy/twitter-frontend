@@ -14,6 +14,14 @@ export const fetchRemovePost = createAsyncThunk(
   async (id) => await axios.delete(`/posts/${id}`)
 );
 
+export const fetchCreateComment = createAsyncThunk(
+  "posts/fetchCreateComment",
+  async (id) => {
+    const { data } = await axios.post(`/posts/${id}/comments`);
+    return data;
+  }
+);
+
 const initialState = {
   posts: {
     items: [],
@@ -59,6 +67,21 @@ const PostsSlice = createSlice({
       state.tags.items = [];
       state.tags.status = "error";
     },
+    
+    // comments
+    [fetchCreateComment.pending]: (state) => {
+      state.posts.items = [];
+      state.posts.status = "loading";
+    },
+    [fetchCreateComment.fulfilled]: (state, action) => {
+      state.posts.items = action.payload;
+      state.posts.status = "loaded";
+    },
+    [fetchCreateComment.rejected]: (state) => {
+      state.posts.items = [];
+      state.posts.status = "error";
+    },
+
     // delete post
     [fetchRemovePost.pending]: (state, action) => {
       // meta.arg- из редакса для корректоного удаления

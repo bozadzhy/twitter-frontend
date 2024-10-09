@@ -1,30 +1,70 @@
-import React from "react";
-
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import axios from "../../axios.js";
 import styles from "./AddComment.module.scss";
-
 import TextField from "@mui/material/TextField";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
+import { fetchCreateComment } from "../../redux/slices/posts.js";
 
 export const Index = () => {
+  
+  const yourAuthToken = localStorage.getItem("token");
+  const dispatch = useDispatch();
+  const { id } = useParams();
+  const [comment, setComment] = React.useState("");
+
+  
+
+  const onSubmit = async (e) => {
+
+
+    if (!comment) {
+      console.warn("Comment cannot be empty");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `/posts/${id}/comments`,
+        {
+          body: comment,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${yourAuthToken}`, // Передаем токен
+          },
+        }
+      );
+
+      // dispatch(fetchCreateComment(response.data)); // Если нужно
+      setComment("");
+    } catch (error) {
+      console.error("Error adding comment:", error.response.data); // Выводим сообщение об ошибке
+    }
+  };
+
   return (
-    <>
-      <div className={styles.root}>
-        <Avatar
-          classes={{ root: styles.avatar }}
-          src="https://mui.com/static/images/avatar/5.jpg"
+    <div className={styles.root}>
+      <Avatar
+        classes={{ root: styles.avatar }}
+        src="https://mui.com/static/images/avatar/5.jpg"
+      />
+      <form className={styles.form} onSubmit={onSubmit}>
+        <TextField
+          label="Написать комментарий"
+          variant="outlined"
+          maxRows={10}
+          multiline
+          fullWidth
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
         />
-        <div className={styles.form}>
-          <TextField
-            label="Написать комментарий"
-            variant="outlined"
-            maxRows={10}
-            multiline
-            fullWidth
-          />
-          <Button variant="contained">Отправить</Button>
-        </div>
-      </div>
-    </>
+        <Button  type="submit" variant="contained">
+          Отправить
+        </Button>
+      </form>
+    </div>
   );
 };
