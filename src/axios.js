@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const instanse = axios.create({
-  baseURL: 'http://localhost:4444',
-  // baseURL: "https://fullstack-backend-d6nr.onrender.com",
+  // baseURL: 'http://localhost:4444',
+  baseURL: "https://fullstack-backend-d6nr.onrender.com",
 });
 // при всех запросах проверяй есть ли в локал сторидж токен и запишиего в headers.Авторизацию
 instanse.interceptors.request.use((config) => {
