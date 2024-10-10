@@ -7,37 +7,64 @@ import { Index } from "../components/AddComment";
 import { CommentsBlock } from "../components/CommentsBlock";
 import axios from "../axios";
 import { Box } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import TextField from "@mui/material/TextField";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+
+import { fetchCreateComment } from "../redux/slices/posts";
 
 export const FullPost = () => {
+  const dispatch = useDispatch();
   const { id } = useParams();
-
-  const allPosts = useSelector((state) => state.posts.posts.items);
-  // console.log("info", allPosts);
+  const [comment, setComment] = React.useState("");
   const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(true);
-  const [dataCom, setDataCom] = useState(null);
+  const [dataCom, setDataCom] = useState([]);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    await handleCommentSubmit(id, comment);
+  };
+
+  const handleCommentSubmit = async (id, comment) => {
+    try {
+      await dispatch(fetchCreateComment({ id, body: comment }));
+      setComment("");
+      setIsSubmitted(!isSubmitted)
+
+    } catch (error) {
+      console.error("Error adding comment:", error);
+    }
+  };
+  // Первый useEffect для получения поста
   useEffect(() => {
-    const fetchData = async () => {
-      try { 
-        const [postResponse, commentsResponse] = await Promise.all([
-          axios.get(`/posts/${id}`),
-          axios.get(`/posts/${id}/comments`),
-        ]);
-
-        setData(postResponse.data);
-        setDataCom(commentsResponse.data);
+    axios.get(`/posts/${id}`)
+      .then((response) => {
+        setData(response.data);
         setIsLoading(false);
-      } catch (err) {
+      })
+      .catch((err) => {
         console.warn(err);
-        alert("Ошибка при получении данных");
+        alert("Ошибка при получении данных поста");
         setIsLoading(false);
-      }
-    };
-
-    fetchData();
+      });
   }, []);
+
+  // Второй useEffect для получения комментариев
+  useEffect(() => {
+    axios.get(`/posts/${id}/comments`)
+      .then(({data}) => {
+      setDataCom(data);
+      })
+      .catch((err) => {
+        console.warn(err);
+        alert("Ошибка при получении данных комментариев");
+      });
+  }, [isSubmitted]);
+
+  console.log("datacom", dataCom)
 
   if (isLoading) {
     return <Post isLoading={isLoading} isFullPost />;
@@ -56,14 +83,34 @@ export const FullPost = () => {
         user={data.user}
         createdAt={data.createdAt}
         viewsCount={data.viewsCount}
-        commentsCount={3}
+        commentsCount={data.comments.length}
         tags={data.tags}
         isFullPost
       >
         <Markdown children={data.text} />
       </Post>
-      <CommentsBlock items={dataCom.comments} isLoading={false}>
-        <Index />
+      <CommentsBlock items={dataCom.comments.length > 0 ? dataCom.comments : []} isLoading={isLoading}>
+        <Box fullWidth sx={{ display: "flex", p: 2 }}>
+          <Avatar
+            sx={{ mr: 2 }}
+            src="https://mui.com/static/images/avatar/5.jpg"
+          />
+          <form style={{ width: "100%" }} onSubmit={onSubmit}>
+            <TextField
+              sx={{ mb: 2 }}
+              label="Написать комментарий"
+              variant="outlined"
+              maxRows={10}
+              multiline
+              fullWidth
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            />
+            <Button type="submit" variant="contained">
+              Отправить
+            </Button>
+          </form>
+        </Box>
       </CommentsBlock>
     </Box>
   );

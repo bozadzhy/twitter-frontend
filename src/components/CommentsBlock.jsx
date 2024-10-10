@@ -10,13 +10,22 @@ import List from "@mui/material/List";
 import Skeleton from "@mui/material/Skeleton";
 
 
-export const CommentsBlock = ({ items, children, isLoading = true }) => {
+export const CommentsBlock = ({ items, children, isLoading }) => {
 // console.log("items", items);
-
+if (isLoading && items.length === 0) {
+  return (
+    <SideBlock title="Комментарии">
+      <div style={{ padding: "16px", textAlign: "center" }}>
+        <p>Comments loading...</p>
+      </div>
+      {children}
+    </SideBlock>
+  );
+}
   return (
     <SideBlock title="Комментарии">
       <List>
-        {(isLoading ? [...Array(5)] : items.slice(0, 3)).map((obj, index) => (
+        {(isLoading ? [...Array(5)] : items).map((obj, index) => (
           <React.Fragment key={index}>
             <ListItem alignItems="flex-start">
               <ListItemAvatar>

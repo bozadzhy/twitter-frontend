@@ -8,6 +8,8 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import { fetchCreateComment } from "../../redux/slices/posts.js";
 
+
+
 export const Index = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
