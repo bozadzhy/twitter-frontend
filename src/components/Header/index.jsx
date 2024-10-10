@@ -76,7 +76,7 @@ const Header = () => {
                   to="/add-post"
                   style={{ textDecoration: "none", marginRight: 8 }}
                 >
-                  <div className={styles.logo}>write an article</div>
+                  <div className={styles.logo}>написать твит</div>
                 </Link>
 
                
@@ -127,7 +127,7 @@ const Header = () => {
                       to="/add-post"
                       style={{ textDecoration: "none", marginRight: 8 }}
                     >
-                      <div className={styles.logo}>write an article</div>
+                      <div className={styles.logo}>Написать твит</div>
                     </Link>
                   </MenuItem>
                 </Menu>
