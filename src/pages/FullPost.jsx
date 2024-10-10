@@ -62,7 +62,7 @@ export const FullPost = () => {
         console.warn(err);
         alert("Ошибка при получении данных комментариев");
       });
-  }, [isSubmitted]);
+  }, [id, isSubmitted]);
 
   console.log("datacom", dataCom)
 
@@ -89,7 +89,7 @@ export const FullPost = () => {
       >
         <Markdown children={data.text} />
       </Post>
-      <CommentsBlock items={dataCom.comments.length > 0 ? dataCom.comments : []} isLoading={isLoading}>
+      <CommentsBlock items={dataCom.comments?.length > 0 ? dataCom.comments : []} isLoading={isLoading}>
         <Box fullWidth sx={{ display: "flex", p: 2 }}>
           <Avatar
             sx={{ mr: 2 }}
