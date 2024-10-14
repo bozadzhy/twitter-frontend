@@ -73,7 +73,7 @@ export const AddPost = () => {
         setTitle(data.title);
         setText(data.text);
         setImageUrl(data.imageUrl);
-        setTags(data.tags);
+        setTags(data.tags.toString());
         setComments(data.comments);
       });
     }
