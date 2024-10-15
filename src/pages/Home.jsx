@@ -17,7 +17,7 @@ import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import Skeleton from "@mui/material/Skeleton";
 import styles from "../components/SideBlock/SideBlock.module.scss";
-import AccessibilityNewSharpIcon from '@mui/icons-material/AccessibilityNewSharp';
+import AccessibilityNewSharpIcon from "@mui/icons-material/AccessibilityNewSharp";
 
 export const Home = () => {
   const dispatch = useDispatch();
@@ -77,7 +77,7 @@ export const Home = () => {
       </Box>
 
       <Grid container spacing={4}>
-        <Grid xs={8} item>
+        <Grid xs={12} sm={8} item>
           <>
             {reversedArray.map((obj, index) =>
               isPostLoading ? (
@@ -103,7 +103,7 @@ export const Home = () => {
             )}
           </>
         </Grid>
-        <Grid xs={4} item>
+        <Grid xs={12} sm={4}  item>
           <TagsBlock items={tags.items} isLoading={isTagsLoading} />
           {/* <CommentsBlock items={allComments} isLoading={false} /> */}
           <Paper>
@@ -118,8 +118,7 @@ export const Home = () => {
                       {isPostLoading ? (
                         <Skeleton variant="circular" width={40} height={40} />
                       ) : (
-                        
-                        <AccessibilityNewSharpIcon/>
+                        <AccessibilityNewSharpIcon />
                       )}
                     </ListItemAvatar>
                     {isPostLoading ? (
@@ -129,8 +128,8 @@ export const Home = () => {
                       </div>
                     ) : (
                       <Typography variant="h5" gutterBottom>
-                      {obj.fullName}
-                    </Typography>
+                        {obj.fullName}
+                      </Typography>
                     )}
                   </ListItem>
                   <Divider variant="inset" component="li" />
